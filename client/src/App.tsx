@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { faqData, contactInfo as staticContactInfo } from './faqData';
 
 interface FAQ {
   id: number;
@@ -302,29 +303,18 @@ const App: React.FC = () => {
   ];
 
   useEffect(() => {
-    fetchFAQs();
-    fetchContactInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadFAQs();
+    loadContactInfo();
   }, [currentLang]);
 
-  const fetchFAQs = async () => {
-    try {
-      const response = await fetch(`/api/faq?lang=${currentLang}`);
-      const data = await response.json();
-      setFaqs(data);
-    } catch (error) {
-      console.error('Error fetching FAQs:', error);
-    }
+  const loadFAQs = () => {
+    const langData = faqData[currentLang as keyof typeof faqData] || faqData.ja;
+    setFaqs(langData);
   };
 
-  const fetchContactInfo = async () => {
-    try {
-      const response = await fetch(`/api/contact?lang=${currentLang}`);
-      const data = await response.json();
-      setContactInfo(data);
-    } catch (error) {
-      console.error('Error fetching contact info:', error);
-    }
+  const loadContactInfo = () => {
+    const langContactInfo = staticContactInfo[currentLang as keyof typeof staticContactInfo] || staticContactInfo.ja;
+    setContactInfo(langContactInfo);
   };
 
   const texts = uiTexts[currentLang] || uiTexts.ja;
